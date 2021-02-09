@@ -36,6 +36,21 @@ public class Rook : Piece
     public override List<Vector2Int> MoveLocations(Vector2Int gridPoint)
     {
         List<Vector2Int> locations = new List<Vector2Int>();
+        //for each of the 4 directions
+        foreach (Vector2Int dir in RookDirections)
+        {
+            //check up to 7 spaces
+            for (int i = 1; i < 8; i++)
+            {
+                //take each gridpoint, and add 1. Then multiply by RookDirection
+                Vector2Int nextGridPoint = new Vector2Int(gridPoint.x + i * dir.x, gridPoint.y + i * dir.y);
+                locations.Add(nextGridPoint);
+                if (GameManager.instance.PieceAtGrid(nextGridPoint))
+                {
+                    break;
+                }
+            }
+        }
         return locations;
     }
 }

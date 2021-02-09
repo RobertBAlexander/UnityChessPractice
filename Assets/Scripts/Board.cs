@@ -46,7 +46,6 @@ public class Board : MonoBehaviour
             // Quaternion.identity refers to the rotation of the object. Quaternion means no rotation https://docs.unity3d.com/ScriptReference/Quaternion-identity.html
             //
             Quaternion.identity, gameObject.transform);
-        
         return newPiece;
     }
     //removes the passed in piece gameobject

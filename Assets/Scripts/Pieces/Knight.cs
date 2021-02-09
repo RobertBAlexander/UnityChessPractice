@@ -36,6 +36,23 @@ public class Knight : Piece
     public override List<Vector2Int> MoveLocations(Vector2Int gridPoint)
     {
         List<Vector2Int> locations = new List<Vector2Int>();
+        int forwardDirection = GameManager.instance.currentPlayer.forward;
+        Vector2Int forwardTwoRight = new Vector2Int(gridPoint.x + 1, gridPoint.y + (forwardDirection * 2));
+        locations.Add(forwardTwoRight);
+        Vector2Int rightTwoForward = new Vector2Int(gridPoint.x + 2, gridPoint.y + forwardDirection);
+        locations.Add(rightTwoForward);
+        Vector2Int rightTwoBack = new Vector2Int(gridPoint.x + 2, gridPoint.y - forwardDirection);
+        locations.Add(rightTwoBack);
+        Vector2Int backTwoRight = new Vector2Int(gridPoint.x + 1, gridPoint.y - (forwardDirection * 2));
+        locations.Add(backTwoRight);
+        Vector2Int backTwoLeft = new Vector2Int(gridPoint.x - 1, gridPoint.y - (forwardDirection * 2));
+        locations.Add(backTwoLeft);
+        Vector2Int leftTwoBack = new Vector2Int(gridPoint.x - 2, gridPoint.y - forwardDirection);
+        locations.Add(leftTwoBack);
+        Vector2Int leftTwoForward = new Vector2Int(gridPoint.x - 2, gridPoint.y + forwardDirection);
+        locations.Add(leftTwoForward);
+        Vector2Int forwardTwoLeft = new Vector2Int(gridPoint.x - 1, gridPoint.y + (forwardDirection * 2));
+        locations.Add(forwardTwoLeft);
         return locations;
     }
 }

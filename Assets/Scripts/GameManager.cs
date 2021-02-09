@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     private Player black;
     public Player currentPlayer;
     public Player otherPlayer;
+    
 
     void Awake()
     {
@@ -74,8 +75,8 @@ public class GameManager : MonoBehaviour
         movedPawns = new List<GameObject>();
         //white is set as the first player to play, and they are also set as the player with a 'true' bool.
         //This bool is passed into 'Player' upon creation and determins whether the player's pieces can move up or down(forward or back) through the z axis.
-        white = new Player("white", true);
-        black = new Player("black", false);
+        white = new Player("White", true);
+        black = new Player("Black", false);
         //Games start with White in control, so set current and other player accordingly(this must alternate elsewhere in code upon completion of each move).
         currentPlayer = white;
         otherPlayer = black;
@@ -87,6 +88,8 @@ public class GameManager : MonoBehaviour
     //prefab contains 3d shape, and type details that inform movement
     private void InitialSetup()
     {
+        //\todo need to figure out where the non gridpoint info for a piee is stored, and store the firstMove boolean there
+        //then can pass through and perform check there.
         AddPiece(whiteRook, white, 0, 0);
         AddPiece(whiteKnight, white, 1, 0);
         AddPiece(whiteBishop, white, 2, 0);
@@ -218,9 +221,16 @@ public class GameManager : MonoBehaviour
         if (pieceToCapture.GetComponent<Piece>().type == PieceType.King)
         {
             //player who took the king wins, destroy this instance of the chess game
-            Debug.Log(currentPlayer.name + " wins!");
+
+            //TODO
+            //At the moment this line should set the player wins name to the current player.
+            PlayerNameDisplay playerNameDisplay = (PlayerNameDisplay)FindObjectOfType(typeof(PlayerNameDisplay));
+                playerNameDisplay.UpdatePlayerName(currentPlayer.name);
+            Debug.Log("testing for an confirm" + currentPlayer.name + " wins!");
             Destroy(board.GetComponent<TileSelector>());
             Destroy(board.GetComponent<MoveSelector>());
+            LevelController levelControler = FindObjectOfType<LevelController>();
+            levelControler.HandleEndCondition();
         }
         //else add the piece at that gridPoint to the (gameobject)List of pieces captured by the player.
         currentPlayer.capturedPieces.Add(pieceToCapture);

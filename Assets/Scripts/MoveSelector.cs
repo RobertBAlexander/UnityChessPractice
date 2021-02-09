@@ -46,24 +46,51 @@ public class MoveSelector : MonoBehaviour {
             tileHighlight.transform.position = Geometry.PointFromGrid(gridPoint);
             if(Input.GetMouseButtonDown(0))
             {
-                if (!moveLocations.Contains(gridPoint))
-                {
-                    return;
-                }
+                //here is where I need to select the deselector for pieces.
+                //two tasks. 1 is to correctly initiate an if only when the current piece is selected.
+                //two is to reset selection position to what it was before I was in move selector area.
 
-                if (GameManager.instance.PieceAtGrid(gridPoint) == null)
+                //one way of doing part one would be to add it as a move option, but if true, instead of moving, you do a different if?
+
+                //Checks to see if the gridpoint of the piece clicked on matchess the gridpoint of the current piece
+                if(gridPoint == GameManager.instance.GridForPiece(movingPiece))
                 {
-                    //if moving to empty point
-                    GameManager.instance.Move(movingPiece, gridPoint);
+                    Debug.Log("Much success");
+                    this.enabled = false;
+                    tileHighlight.SetActive(false);
+                    GameManager.instance.DeselectPiece(movingPiece);
+                    movingPiece = null;
+                    //below two lines are calling on the tile selector .cs file, getting the component and telling it to enter the 'select tile' state.
+                    TileSelector selector = GetComponent<TileSelector>();
+                    selector.EnterState();
+                    foreach (GameObject highlight in locationHighlights)
+                    {
+                        Destroy(highlight);
+                    }
                 }
                 else
                 {
-                    //if moving to point with enemy piece, capture it
-                    GameManager.instance.CapturePieceAt(gridPoint);
-                    GameManager.instance.Move(movingPiece, gridPoint);
-                }
+                    if (!moveLocations.Contains(gridPoint))
+                    {
+                        return;
+                    }
 
-                ExitState();
+                    if (GameManager.instance.PieceAtGrid(gridPoint) == null)
+                    {
+                        //if moving to empty point
+                        GameManager.instance.Move(movingPiece, gridPoint);
+                    }
+                    else
+                    {
+                        //if moving to point with enemy piece, capture it
+                        GameManager.instance.CapturePieceAt(gridPoint);
+                        GameManager.instance.Move(movingPiece, gridPoint);
+                    }
+
+                    ExitState();
+                }
+                //alternatively it should be above all the below if statements, and it should be a direct check of gridpoint against gridpoint of currentpiece
+                
             }
         }
         else

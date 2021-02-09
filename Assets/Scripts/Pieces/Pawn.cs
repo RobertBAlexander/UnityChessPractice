@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pawn : Piece
+
 {
     //public override List<Vector2Int> MoveLocations(Vector2Int gridPoint)
     public override List<Vector2Int> MoveLocations(Vector2Int gridPoint)
@@ -43,12 +44,27 @@ public class Pawn : Piece
         //which can be different for each player. +1 for one player, -1 for the other.
         int forwardDirection = GameManager.instance.currentPlayer.forward;
         Vector2Int forward = new Vector2Int(gridPoint.x, gridPoint.y + forwardDirection);
+        Vector2Int twoSteps = new Vector2Int(gridPoint.x, gridPoint.y + (forwardDirection * 2));
+        //Vector2Int startLocation = new Vector2Int(gridPoint.x, gridPoint.y);
         //why is this one set if if false, and the other two are set to if true?
         //because in this situation, a piece in front of the pawn means it is not allowed to move there.
         //if a piece is forward and left or right, the pawn IS allowed to move there, and ONLY if an enemy piece is there!
-        if(GameManager.instance.PieceAtGrid(forward) == false)
+        if (GameManager.instance.PieceAtGrid(forward) == false)
         {
             locations.Add(forward);
+        }
+        //check if a piece is two steps forward of current piece
+        if (GameManager.instance.PieceAtGrid(twoSteps) == false)
+        {
+            //check if the current piece we have is in the list of 'pawns that have moved' through 'has pawn moved' method.
+            //This method returns a bool that returns true, if a pawn has already moved.
+            //we use an !, as we want to know if the pawn has not moved. If it has not moved, add this move option.
+            if(!GameManager.instance.HasPawnMoved(GameManager.instance.PieceAtGrid(gridPoint)))
+            {
+                Debug.Log("Got to second check position");
+                locations.Add(twoSteps);
+            }
+                
         }
         //allows pawn to move forward(relative) and right
         Vector2Int forwardRight = new Vector2Int(gridPoint.x + 1, gridPoint.y + forwardDirection);
